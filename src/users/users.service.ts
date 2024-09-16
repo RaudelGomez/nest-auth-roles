@@ -1,19 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from 'enums/roles.enum';
+import { HashPasswordService } from 'src/hash-password.service';
+import { LoginDto } from './dto/login-user.dto';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly hashPasswordService: HashPasswordService,
+  ) {}
 
-  constructor(private readonly prismaService: PrismaService){}
+  async register(createUserDto: CreateUserDto): Promise<any> {
+    const user = await this.prismaService.user.findUnique({
+      where: { email: createUserDto.email },
+    });
+    if (user) {
+      throw new BadRequestException('That email is not available');
+    }
+    const pass = await this.hashPasswordService.hashPassword(createUserDto.password);
+    const userOk = await this.prismaService.user.create({
+      data: {...createUserDto, password: pass, roles: [Role.USER]},
+    });
+    const { password, roles, ...result } = userOk;
+    return result;
+  }
 
-  create(createUserDto: CreateUserDto) {
-      return this.prismaService.user.create({
+  async login(loginDto: LoginDto) {
+    const user = await this.prismaService.user.findUnique({
+      where: {email: loginDto.email}
+    });
+    if(!user){
+      throw new BadRequestException('The user dont exist');
+    }
+    const passRecover = await this.hashPasswordService.recoverPasswordhash(loginDto.password, user.password);
+    if(!passRecover){
+      throw new UnauthorizedException('The password is incorrect');
+    }
+    // return await this.prismaService.user.create({
+    //   data: {
+    //     ...createUserDto,
+    //     roles: [Role.USER],
+    //   },
+    // });
+  }
+
+  async create(createUserDto: CreateUserDto) {
+    return await this.prismaService.user.create({
       data: {
-        ...createUserDto, roles: [Role.USER]
-      }
+        ...createUserDto,
+        roles: [Role.USER],
+      },
     });
   }
 

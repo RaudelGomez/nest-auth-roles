@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsArray, IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
 import { Role } from "enums/roles.enum";
 
 export class CreateUserDto {
