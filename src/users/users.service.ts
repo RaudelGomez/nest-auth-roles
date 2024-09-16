@@ -5,12 +5,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from 'enums/roles.enum';
 import { HashPasswordService } from 'src/hash-password.service';
 import { LoginDto } from './dto/login-user.dto';
+import { JwtServices } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly hashPasswordService: HashPasswordService,
+    private readonly jwtServices: JwtServices
   ) {}
 
   async register(createUserDto: CreateUserDto): Promise<any> {
@@ -33,18 +35,15 @@ export class UsersService {
       where: {email: loginDto.email}
     });
     if(!user){
-      throw new BadRequestException('The user dont exist');
+      throw new UnauthorizedException('The user dont exist');
     }
     const passRecover = await this.hashPasswordService.recoverPasswordhash(loginDto.password, user.password);
     if(!passRecover){
       throw new UnauthorizedException('The password is incorrect');
     }
-    // return await this.prismaService.user.create({
-    //   data: {
-    //     ...createUserDto,
-    //     roles: [Role.USER],
-    //   },
-    // });
+    const payload = {user: user.email, roles: user.roles}
+    const jwt = await this.jwtServices.signToken(payload)
+    return jwt;
   }
 
   async create(createUserDto: CreateUserDto) {
