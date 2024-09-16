@@ -42,8 +42,8 @@ export class UsersService {
       throw new UnauthorizedException('The password is incorrect');
     }
     const payload = {user: user.email, roles: user.roles}
-    const jwt = await this.jwtServices.signToken(payload)
-    return jwt;
+    const token = await this.jwtServices.signToken(payload)
+    return token;
   }
 
   async create(createUserDto: CreateUserDto) {
