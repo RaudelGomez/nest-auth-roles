@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginDto } from './dto/login-user.dto';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -14,8 +15,16 @@ export class UsersController {
   }
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.usersService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
+    const result = await this.usersService.login(loginDto);
+    res.cookie('authToken', result.token, 
+      {
+        maxAge: 1000 * 60, //60s
+      // httpOnly: true,
+      //Secure: process.env.NEST_ENV === 'production',
+      }
+    );
+    return res.send({message: 'Login successful', user: result.email})
   }
 
   @Post()

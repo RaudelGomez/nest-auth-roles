@@ -43,7 +43,7 @@ export class UsersService {
     }
     const payload = {user: user.email, roles: user.roles}
     const token = await this.jwtServices.signToken(payload)
-    return token;
+    return {token: token, email: user.email};
   }
 
   async create(createUserDto: CreateUserDto) {
