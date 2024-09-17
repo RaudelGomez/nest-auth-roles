@@ -19,7 +19,7 @@ export class UsersController {
     const result = await this.usersService.login(loginDto);
     res.cookie('authToken', result.token, 
       {
-        maxAge: 1000 * 60, //60s
+        maxAge: 1000 * 20, //60s
       // httpOnly: true,
       //Secure: process.env.NEST_ENV === 'production',
       }

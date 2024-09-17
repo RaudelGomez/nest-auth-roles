@@ -3,6 +3,8 @@ import { DashboardService } from './dashboard.service';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
 import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 import { PermisionGuard } from 'src/guards/permision/permision.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/roles.enum';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -15,6 +17,7 @@ export class DashboardController {
 
   
   @Get()
+  // @Roles(Role.SUPERADMIN)
   @UseGuards(PermisionGuard)
   findAll() {
     return this.dashboardService.findAll();

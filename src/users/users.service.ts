@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Role } from 'enums/roles.enum';
+import { Role } from 'src/enums/roles.enum';
 import { HashPasswordService } from 'src/hash-password.service';
 import { LoginDto } from './dto/login-user.dto';
 import { JwtServices } from 'src/jwt/jwt.service';

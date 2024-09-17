@@ -9,7 +9,7 @@ export class DashboardService {
   }
 
   findAll() {
-    return `This action returns all dashboard`;
+    return {'message': 'good'};
   }
 
   findOne(id: number) {
