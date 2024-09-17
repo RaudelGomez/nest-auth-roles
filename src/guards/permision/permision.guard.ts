@@ -16,11 +16,11 @@ export class PermisionGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-
+    if(!requirePermission){
+      return true;
+    }
     const request = context.switchToHttp().getRequest();
     const authToken= request.cookies['authToken']?.access_token;
-    console.log('token', authToken);
-
     if(!authToken){
       throw new UnauthorizedException();
     }

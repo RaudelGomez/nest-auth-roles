@@ -17,7 +17,7 @@ export class DashboardController {
 
   
   @Get()
-  @Roles(Role.USER)
+  // @Roles(Role.USER)
   @UseGuards(PermisionGuard)
   findAll() {
     return this.dashboardService.findAll();
