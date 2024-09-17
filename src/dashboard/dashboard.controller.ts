@@ -18,13 +18,13 @@ export class DashboardController {
   
   @Get()
   // @Roles(Role.USER)
-  @UseGuards(PermisionGuard)
+  // @UseGuards(PermisionGuard)
   findAll() {
     return this.dashboardService.findAll();
   }
 
   @Roles(Role.ADMIN)
-  @UseGuards(PermisionGuard)
+  // @UseGuards(PermisionGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.dashboardService.findOne(+id);
