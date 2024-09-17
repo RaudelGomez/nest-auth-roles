@@ -17,12 +17,14 @@ export class DashboardController {
 
   
   @Get()
-  // @Roles(Role.SUPERADMIN)
+  @Roles(Role.USER)
   @UseGuards(PermisionGuard)
   findAll() {
     return this.dashboardService.findAll();
   }
 
+  @Roles(Role.ADMIN)
+  @UseGuards(PermisionGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.dashboardService.findOne(+id);
