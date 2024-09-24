@@ -8,6 +8,7 @@ export class AuthMiddleware implements NestMiddleware {
     if(!authToken){
       throw new UnauthorizedException('You dont have authorization to watch')
     }
+    //halllo
     next();
   }
 }
